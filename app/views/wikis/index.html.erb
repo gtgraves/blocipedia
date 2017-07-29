@@ -1,0 +1,40 @@
+<h1 class='text-center'>Wiki Index</h1>
+<br>
+
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <table class="table table-striped">
+      <tbody>
+        <% @wikis.each do |wiki| %>
+          <tr>
+            <td>
+              <h4><%= link_to wiki.title, wiki %></h4>
+            </td>
+            <td>
+              <% if user_signed_in? %>
+                <%= link_to "Edit", edit_wiki_path(wiki), class: 'btn btn-warning' %>
+              <% end %>
+            </td>
+            <td>
+              <% if user_signed_in? %>
+                <%= link_to "Delete", wiki, method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this wiki?' } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-4"></div>
+</div>
+
+<div class="row">
+  <div class="col-md-5"></div>
+  <div class="col-md-4">
+    <% if user_signed_in? %>
+      <%= link_to "Create a new Wiki", new_wiki_path, class: 'btn btn-success' %>
+    <% end %>
+  </div>
+  <div class="col-md-3"></div>
+</div>
