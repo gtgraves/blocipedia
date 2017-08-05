@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
 
+  after_initialize { self.role ||= :standard }
+
   validates :name, length: { minimum: 1, maximum: 25 }, presence: true
   validates :email, length: { minimum: 3, maximum: 254 }
+
+  enum role: [:standard, :admin, :premium]
 end
