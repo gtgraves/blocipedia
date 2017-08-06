@@ -1,5 +1,4 @@
 class WikisController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
 
   def index
     @wikis = Wiki.all
@@ -11,11 +10,15 @@ class WikisController < ApplicationController
 
   def new
     @wiki = Wiki.new
+    @rescue_redirect = new_user_session_path
+    authorize @wiki
   end
 
   def create
     @wiki = Wiki.new(wiki_params)
     @wiki.user = current_user
+    @rescue_redirect = new_user_session_path
+    authorize @wiki
 
     if @wiki.save
       redirect_to @wiki, notice: "Wiki was saved successfully."
@@ -27,12 +30,15 @@ class WikisController < ApplicationController
 
   def edit
     @wiki = Wiki.find(params[:id])
+    @rescue_redirect = new_user_session_path
+    authorize @wiki
   end
 
   def update
     @wiki = Wiki.find(params[:id])
-
     @wiki.assign_attributes(wiki_params)
+    @rescue_redirect = new_user_session_path
+    authorize @wiki
 
     if @wiki.save
       flash[:notice] = "Wiki was updated."
@@ -45,6 +51,8 @@ class WikisController < ApplicationController
 
   def destroy
     @wiki = Wiki.find(params[:id])
+    destroy_redirect
+    authorize @wiki
 
     if @wiki.destroy
       flash[:notice] = "\"#{@wiki.title}\" was deleted successfully."
@@ -60,4 +68,18 @@ class WikisController < ApplicationController
   def wiki_params
     params.require(:wiki).permit(:title, :body)
   end
+
+  def user_not_authorized
+    flash[:alert] = "You are not authorized to perform this action."
+    redirect_to @rescue_redirect
+  end
+
+  def destroy_redirect
+    unless user_signed_in?
+      @rescue_redirect = new_user_session_path
+    else
+      @rescue_redirect = @wiki
+    end
+  end
+
 end
