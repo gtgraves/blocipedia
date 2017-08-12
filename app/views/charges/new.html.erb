@@ -1,0 +1,30 @@
+<h1 class='text-center'>Upgrade to Premium!</h1>
+<br>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-7">
+    <p>Premium members get the following benefits:</p>
+    <ul>
+      <li>The ability to create private wikis!</li>
+      <li>That's about it!</li>
+    </ul>
+    <p>Your lifetime membership of $15.00 helps keep us running. Thanks in advance for your support!</p>
+  </div>
+  <div class="col-md-3"></div>
+</div>
+<br>
+<div class="row">
+  <div class="col-md-4"></div>
+  <div class="col-md-4">
+    <%= form_tag charges_path do %>
+      <h4>Upgrade today for $15.00!</h4>
+      <script class='stripe-button'
+        src="https://checkout.stripe.com/checkout.js"
+        data-key="<%= @stripe_btn_data[:key] %>"
+        data-amount="<%= @stripe_btn_data[:amount] %>"
+        data-description="<%= @stripe_btn_data[:description] %>" >
+      </script>
+    <% end %>
+  </div>
+  <div class="col-md-4"></div>
+</div>

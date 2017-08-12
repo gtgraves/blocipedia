@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170805145558) do
+ActiveRecord::Schema.define(version: 20170812160920) do
+
+  create_table "amounts", force: :cascade do |t|
+    t.integer  "pennies"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false

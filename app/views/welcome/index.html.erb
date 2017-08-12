@@ -10,9 +10,18 @@
 <div class="row">
   <div class="col-md-6 text-center">
     <h2>Create your own wikis!</h2>
-    <p>A standard membership let's you create and edit unlimited wikis</p>
+    <p>A standard membership lets you create and edit unlimited wikis</p>
+    <%= link_to "View All Wikis", wikis_path, class: 'btn btn-info' %>
   </div>
   <div class="col-md-6 text-center">
     <h2>Go premium, get more.</h2>
     <p>Premium members can create private wikis!</p>
+    <% if user_signed_in? && current_user.standard? %>
+      <%= link_to "Upgrade Today!", new_charge_path, class: 'btn btn-warning' %>
+    <% elsif user_signed_in? && current_user.premium? %>
+      <p>Create private wikis today!</p>
+      <%= link_to "Cancel Premium Memership?", downgrade_path, method: :post, data: {confirm: 'Are you sure you want to cancel your premium membership? This action cannot be undone.'} %>
+    <% else %>
+      <p> <%= link_to "Sign Up", new_user_registration_path %> for a account to access upgrade options! </p>
+    <% end %>
 </div>

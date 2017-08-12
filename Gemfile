@@ -22,6 +22,7 @@ gem 'bootstrap-sass'
 gem 'figaro'
 gem 'devise'
 gem 'pundit'
+gem 'stripe'
 
 group :development, :test do
   gem 'byebug'
