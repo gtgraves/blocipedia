@@ -3,9 +3,8 @@
   user = User.create!(
     name: Faker::Internet.unique.user_name,
     email: Faker::Internet.unique.safe_email,
-    password: Faker::Internet.password(8)
+    password: 'helloworld'
   )
-
   user.confirm
 end
 users = User.all

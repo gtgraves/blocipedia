@@ -3,7 +3,9 @@
   <h1>Blocipedia</h1>
   <p>All the stuff you want to know (plus some other stuff you didn't want)</p>
   <p>
-    <%= link_to "Sign Up", new_user_registration_path, class: 'btn btn-primary' %> or <%= link_to "Sign In", new_user_session_path, class: 'btn btn-info' %>
+    <% unless user_signed_in? %>
+      <%= link_to "Sign Up", new_user_registration_path, class: 'btn btn-primary' %> or <%= link_to "Sign In", new_user_session_path, class: 'btn btn-info' %>
+    <% end %>
   </p>
 </div>
 
@@ -18,9 +20,11 @@
     <p>Premium members can create private wikis!</p>
     <% if user_signed_in? && current_user.standard? %>
       <%= link_to "Upgrade Today!", new_charge_path, class: 'btn btn-warning' %>
-    <% elsif user_signed_in? && current_user.premium? %>
+    <% elsif user_signed_in? && (current_user.premium? || current_user.admin?) %>
       <p>Create private wikis today!</p>
-      <%= link_to "Cancel Premium Memership?", downgrade_path, method: :post, data: {confirm: 'Are you sure you want to cancel your premium membership? This action cannot be undone.'} %>
+      <% if user_signed_in? && current_user.premium? %>
+        <%= link_to "Cancel Premium Memership?", downgrade_path, method: :post, data: {confirm: 'Are you sure you want to cancel your premium membership? This action cannot be undone, and all wikis you have designated as private will be made public.'} %>
+      <% end %>
     <% else %>
       <p> <%= link_to "Sign Up", new_user_registration_path %> for a account to access upgrade options! </p>
     <% end %>
