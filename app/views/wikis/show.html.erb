@@ -3,7 +3,7 @@
 </h1>
 
 <div class="panel panel-default">
-  <p class="panel-body"><%= @wiki.body %></p>
+  <div class="panel-body"><%= markdown(@wiki.body) %></div>
 </div>
 
 <div class="row">
