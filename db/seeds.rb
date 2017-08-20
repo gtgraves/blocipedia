@@ -35,6 +35,15 @@ standard = User.create!(
 )
 standard.confirm
 
+# Create a premium user
+premium = User.create!(
+  name: 'Premium User',
+  email: 'premium@example.com',
+  password: 'helloworld',
+  role: 'premium'
+)
+premium.confirm
+
 puts "Seed finished"
 puts "#{User.count} users created"
 puts "#{Wiki.count} wikis created"

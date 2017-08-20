@@ -3,7 +3,7 @@ include RandomData
 
 RSpec.describe WikisController, type: :controller do
   let(:my_user) { create(:user) }
-  let(:my_wiki) { create(:wiki, user: my_user) }
+  let(:my_wiki) { create(:wiki, user: my_user, private: false) }
   let(:other_user) { create(:user) }
 
   context "guest user" do
@@ -11,11 +11,6 @@ RSpec.describe WikisController, type: :controller do
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
-      end
-
-      it "assigns Wiki.all to wiki" do
-        get :index
-        expect(assigns(:wikis)).to eq([my_wiki])
       end
     end
 
@@ -85,11 +80,6 @@ RSpec.describe WikisController, type: :controller do
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
-      end
-
-      it "assigns Wiki.all to wiki" do
-        get :index
-        expect(assigns(:wikis)).to eq([my_wiki])
       end
     end
 
@@ -204,11 +194,6 @@ RSpec.describe WikisController, type: :controller do
       it "returns http success" do
         get :index
         expect(response).to have_http_status(:success)
-      end
-
-      it "assigns Wiki.all to wiki" do
-        get :index
-        expect(assigns(:wikis)).to eq([my_wiki])
       end
     end
 
