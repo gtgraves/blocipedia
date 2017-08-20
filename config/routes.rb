@@ -9,7 +9,5 @@ Rails.application.routes.draw do
 
   post 'users/downgrade' => 'users#downgrade', as: :downgrade
 
-  get 'about' => 'welcome#about'
-
   root 'welcome#index'
 end

@@ -1,23 +1,27 @@
 class WikisController < ApplicationController
 
   def index
-    @wikis = Wiki.visible_to(current_user)
+    @wikis = policy_scope(Wiki)
   end
 
   def show
     @wiki = Wiki.find(params[:id])
+    index_redirect
+    if @wiki.private?
+      authorize @wiki
+    end
   end
 
   def new
     @wiki = Wiki.new
-    @rescue_redirect = new_user_session_path
+    index_redirect
     authorize @wiki
   end
 
   def create
     @wiki = Wiki.new(wiki_params)
     @wiki.user = current_user
-    @rescue_redirect = new_user_session_path
+    index_redirect
     authorize @wiki
 
     if @wiki.save
@@ -30,14 +34,14 @@ class WikisController < ApplicationController
 
   def edit
     @wiki = Wiki.find(params[:id])
-    @rescue_redirect = new_user_session_path
+    wiki_redirect
     authorize @wiki
   end
 
   def update
     @wiki = Wiki.find(params[:id])
     @wiki.assign_attributes(wiki_params)
-    @rescue_redirect = new_user_session_path
+    wiki_redirect
     authorize @wiki
 
     if @wiki.save
@@ -51,7 +55,7 @@ class WikisController < ApplicationController
 
   def destroy
     @wiki = Wiki.find(params[:id])
-    destroy_redirect
+    wiki_redirect
     authorize @wiki
 
     if @wiki.destroy
@@ -74,11 +78,19 @@ class WikisController < ApplicationController
     redirect_to @rescue_redirect
   end
 
-  def destroy_redirect
+  def wiki_redirect
     unless user_signed_in?
       @rescue_redirect = new_user_session_path
     else
       @rescue_redirect = @wiki
+    end
+  end
+
+  def index_redirect
+    unless user_signed_in?
+      @rescue_redirect = new_user_session_path
+    else
+      @rescue_redirect = wikis_path
     end
   end
 

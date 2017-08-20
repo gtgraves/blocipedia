@@ -22,6 +22,6 @@ class CollaboratorPolicy < ApplicationPolicy
 
   def requirements
     wiki = collaborator.wiki
-    (user.admin? or user.premium?) and wiki.user == user
+    (user.admin? or user.premium?) and wiki.user == user and wiki.private == true
   end
 end

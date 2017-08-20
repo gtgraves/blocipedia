@@ -6,6 +6,7 @@ RSpec.describe CollaboratorsController, type: :controller do
   let(:third_user) { create(:user) }
   let(:user_wiki) { create(:wiki, user: my_user, private: true) }
   let(:other_user_wiki) { create(:wiki, user: other_user, private: true) }
+  let(:public_wiki) { create(:wiki, user: my_user) }
   let(:collaboration) { Collaborator.create!(wiki_id: other_user_wiki.id, user_id: my_user.id) }
   let(:destroy_collaboration) { Collaborator.create!(wiki_id: user_wiki.id, user_id: third_user.id) }
 
@@ -115,11 +116,11 @@ RSpec.describe CollaboratorsController, type: :controller do
 
     describe "POST create" do
       it "increases the number of collaborators by 1" do
-        expect{ post :create, wiki_id: user_wiki.id, collaborator: {wiki_id: user_wiki.id, user_id: other_user.id } }.to change(Collaborator,:count).by(1)
+        expect{ post :create, wiki_id: user_wiki.id, collaborator: {wiki_id: user_wiki.id, user_id: other_user.email } }.to change(Collaborator,:count).by(1)
       end
 
       it "redirects to the wiki" do
-        post :create, wiki_id: user_wiki.id, collaborator: {wiki_id: user_wiki.id, user_id: other_user.id}
+        post :create, wiki_id: user_wiki.id, collaborator: {wiki_id: user_wiki.id, user_id: other_user.email}
         expect(response).to redirect_to user_wiki
       end
     end
@@ -134,6 +135,35 @@ RSpec.describe CollaboratorsController, type: :controller do
       it "redirects to the wiki" do
         delete :destroy, { wiki_id: user_wiki.id, id: destroy_collaboration.id }
         expect(response).to redirect_to user_wiki
+      end
+    end
+  end
+
+  context "premium user modifying collaborators on a public wiki" do
+    before do
+      my_user.confirm
+      my_user.premium!
+      sign_in my_user
+    end
+
+    describe 'GET new' do
+      it "returns http redirect" do
+        get :new, wiki_id: public_wiki.id
+        expect(response).to redirect_to(public_wiki)
+      end
+    end
+
+    describe 'POST create' do
+      it "returns http redirect" do
+        post :create, wiki_id: public_wiki.id, collaborator: {wiki_id: public_wiki.id, user_id: my_user.id}
+        expect(response).to redirect_to(public_wiki)
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it "returns http redirect" do
+        delete :destroy, { wiki_id: public_wiki.id, id: collaboration.id }
+        expect(response).to redirect_to(public_wiki)
       end
     end
   end
